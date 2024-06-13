@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2024-present U.N. Owen <void@some.where>
-#
-# SPDX-License-Identifier: MIT
 import click
 
 from dataclasses_excel.__about__ import __version__
