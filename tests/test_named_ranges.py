@@ -1,11 +1,11 @@
 import logging
 from dataclasses import dataclass
 from datetime import datetime
+from typing import List, Tuple
 
 import pytest
-from openpyxl import Workbook, load_workbook
-
 from dataclasses_excel import read_excel
+from openpyxl import Workbook, load_workbook
 
 log = logging.getLogger(__name__)
 
@@ -22,13 +22,21 @@ def wb(shared_datadir):
 def test_dataclass(wb: Workbook):
     @dataclass
     class MyClass:
-        foo: int
-        bar: str
-        baf: datetime
+        integer: int
+        string: str
+        datetime: datetime
+        integer_list: List[int]
+        integer_matrix: List[Tuple[int]]
 
     obj = read_excel(MyClass, wb)
 
-    assert obj == MyClass(foo=123, bar="string", baf=datetime(2024, 1, 1))
+    assert obj == MyClass(
+        integer=123,
+        string="string",
+        datetime=datetime(2024, 1, 1),
+        integer_list=[1, 2, 3],
+        integer_matrix=[(1, 2), (3, 4)],
+    )
 
 
 # def test_defined_names(wb: Workbook):
