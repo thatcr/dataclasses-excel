@@ -48,19 +48,18 @@ def _resolve_defined_name(field: Field, type_: type, wb: Workbook, defn):
     # usetyping.get_origin to figure out if it's a list
     for dest in defn.destinations:
         # this resolves to the cell or range - data_type is n/s/d
-        cell: Cell = wb[dest[0]][dest[1]]
+        contents = wb[dest[0]][dest[1]]
 
-        if isinstance(cell, Cell):
-            log.debug(f"\t= {cell.value!r}: {cell.data_type}")
-            return cell.value
+        log.debug(f"{field.name} -> {defn.attr_text} : {contents.data_type}")
 
-        rows = cell
+        if isinstance(contents, Cell):
+            return contents.value
 
         if get_origin(field.type) is list:
             if get_origin(get_args(field.type)[0]) not in (list, tuple):
-                return [cell.value for row in rows for cell in row]
+                return [cell.value for row in contents for cell in row]
 
-            return [tuple(cell.value for cell in row) for row in rows]
+            return [tuple(cell.value for cell in row) for row in contents]
 
         raise ValueError("unknown value type {type(rows)}")
 
